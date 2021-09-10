@@ -1,0 +1,116 @@
+{
+  "name": "react-native-component-splitter",
+  "displayName": "React Native Component Splitter",
+  "description": "Splits long components into shorter, readable subcomponents",
+  "version": "0.0.1",
+  "icon": "src/assets/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nomi9995/react-native-component-splitter"
+  },
+  "publisher": "nomi9995",
+  "engines": {
+    "vscode": "^1.53.0"
+  },
+  "categories": [
+    "Other",
+    "Formatters",
+    "Snippets"
+  ],
+  "keywords": [
+    "React Native Component Splitter",
+    "React Component Splitter",
+    "Splitter",
+    "React",
+    "Split",
+    "Component",
+    "Code Split",
+    "Code Splitter",
+    "Component Split",
+    "Component Splitter",
+    "SubComponent",
+    "Sub Component"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "react-native-component-splitter.split",
+        "title": "Split Component"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "react-native-component-splitter.split",
+        "key": "ctrl+shift+k",
+        "mac": "ctrl+alt+cmd+k",
+        "when": "editorHasSelection && resourceLangId == javascript || resourceExtname == .tsx || resourceExtname == .jsx || resourceExtname == .js"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "react-native-component-splitter.split",
+          "when": "editorHasSelection && resourceLangId == javascript || resourceExtname == .tsx || resourceExtname == .jsx || resourceExtname == .js"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "yarn run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "test-compile": "tsc -p ./",
+    "test-watch": "tsc -watch -p ./",
+    "pretest": "yarn run test-compile && yarn run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "dependencies": {
+    "@types/jest": "^27.0.1",
+    "child_process": "^1.0.2",
+    "clipboardy": "^2.3.0",
+    "find-babel-config": "^1.2.0",
+    "fs-extra": "^10.0.0",
+    "lodash": "^4.17.21",
+    "os": "^0.1.2",
+    "path": "^0.12.7",
+    "prettier": "^2.4.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.15.6",
+    "@babel/plugin-proposal-optional-chaining": "^7.14.5",
+    "@babel/plugin-transform-react-jsx-source": "^7.14.5",
+    "@babel/plugin-transform-typescript": "^7.15.4",
+    "@babel/preset-react": "^7.14.5",
+    "@babel/preset-typescript": "^7.15.0",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@types/glob": "^7.1.4",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.9.1",
+    "@types/vscode": "^1.60.0",
+    "@typescript-eslint/eslint-plugin": "^4.31.0",
+    "@typescript-eslint/parser": "^4.31.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-jest": "^24.4.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.25.1",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-unused-imports": "^1.1.4",
+    "glob": "^7.1.7",
+    "jest": "^27.1.1",
+    "json-fixer": "^1.6.12",
+    "mocha": "^9.1.1",
+    "ts-loader": "^9.2.5",
+    "typescript": "^4.4.3",
+    "vscode-test": "^1.6.1",
+    "webpack": "^5.52.1",
+    "webpack-cli": "^4.8.0"
+  }
+}
