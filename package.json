@@ -2,7 +2,7 @@
   "name": "react-native-component-splitter",
   "displayName": "React Native Component Splitter",
   "description": "Splits long components into shorter, readable subcomponents",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "icon": "src/assets/icon.png",
   "repository": {
     "type": "git",
@@ -19,6 +19,9 @@
   ],
   "keywords": [
     "React Native Component Splitter",
+    "React Component Divider",
+    "Divide",
+    "Divider",
     "React Component Splitter",
     "Splitter",
     "React",
@@ -93,7 +96,7 @@
     "@types/glob": "^7.1.4",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.9.1",
-    "@types/vscode": "^1.60.0",
+    "@types/vscode": "^1.53.0",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
     "babel-eslint": "^10.1.0",
