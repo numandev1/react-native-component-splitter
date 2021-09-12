@@ -32,7 +32,7 @@ or press `alt+option+cmd+k`
 | Plateform | Key                  |
 | --------- | -------------------- |
 | MAC       | **alt+option+cmd+k** |
-| MAC       | **ctrl+shift+k**     |
+| Window    | **ctrl+shift+k**     |
 
 ## Contributors ✨
 
