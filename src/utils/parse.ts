@@ -10,6 +10,7 @@ import { parseForESLint } from "babel-eslint";
 import findBabelConfig from "find-babel-config";
 import { ESLint, Linter } from "eslint";
 const jsonFix = require('json-fixer');
+import { regexNormalizeResult } from './common';
 
 const eslintPlugins = {
   react: require("eslint-plugin-react"),
@@ -129,7 +130,7 @@ const getUsedImports = (code: any, options: any = { transform: true }) => {
     code = transformCode(code);
   };
   let allImports: any[] = getImports(code, { transform: false });
-  const reactNativeImportIndex: number = allImports.findIndex(_import => /import {[^}]*}.*(?='react-native').*/.test(_import));
+  const reactNativeImportIndex: number = allImports.findIndex(_import => /import {[^}]*}.*(?=['"]react-native['"]).*/.test(_import));
   if (reactNativeImportIndex > -1) {
     allImports[reactNativeImportIndex] = allImports[reactNativeImportIndex].replace(/(\}\s+from)/, ', StyleSheet$1');
   }
@@ -205,10 +206,20 @@ const getUsedStyleSheetObjects = (selection: string, stylesheetObject: any, styl
   try {
     const styleNamesRegex = new RegExp(`(?<=${stylesheetName}.)(\\w+)`, "g");
     const stylesNameResults = selection.match(styleNamesRegex);
-    const { data } = jsonFix(stylesheetObject);
-    stylesNameResults.forEach(name => {
-      Object.assign(usedStylesheetObject, { [name]: data[name] });
-    });
+    let data = [];
+    try {
+      const { data: JsonData } = jsonFix(stylesheetObject);
+      data = JsonData;
+      stylesNameResults.forEach(name => {
+        Object.assign(usedStylesheetObject, { [name]: data[name] });
+      });
+    } catch (error) {
+      stylesNameResults.forEach(name => {
+        const styleValueRegex = new RegExp(`(?<=${name}\\s*:\\s*){\\s*[^{]*?}`, "g");
+        const styleValue = stylesheetObject.match(styleValueRegex);
+        Object.assign(usedStylesheetObject, { [name]: regexNormalizeResult(styleValue[0]) });
+      });
+    }
   } catch (error) {
   }
   return JSON.stringify(usedStylesheetObject, null, 2);
@@ -218,7 +229,7 @@ const getStylesheetNameAndObject = (code: string, selection: string) => {
   let stylesheetName = "styles";
   let stylesheetObject = "{}";
   try {
-    const nameAndObjectRegex = new RegExp(/(\w+) +?= +?StyleSheet.create\(({\n(.+\n)+\})\);/, "g");
+    const nameAndObjectRegex = new RegExp(/(\w+) +?= +?StyleSheet.create\(({\n(.+\n)+\})\)/, "g");
     const stylesheetMatchResults = nameAndObjectRegex.exec(code);
     stylesheetName = stylesheetMatchResults[1];
     stylesheetObject = getUsedStyleSheetObjects(selection, stylesheetMatchResults[2] || stylesheetObject, stylesheetName);

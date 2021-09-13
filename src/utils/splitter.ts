@@ -3,6 +3,7 @@ import { window, Range, Position } from "vscode";
 import * as fs from "fs-extra";
 import * as path from "path";
 import parseUtils from "./parse";
+import { regexNormalizeResult } from "./common";
 
 const validateSelection = () => {
   const editor = window.activeTextEditor;
@@ -221,7 +222,7 @@ const extractRelevantImportsAndPropsAndStylesheet = () => {
     `;
   const props = parseUtils.getUndefinedVars(selectionAndImports);
   const imports = parseUtils.getUsedImports(selectionAndImports);
-  const stylesheet = parseUtils.getStylesheet(code, selection);
+  const stylesheet = regexNormalizeResult(parseUtils.getStylesheet(code, selection));
   return {
     props,
     imports,
