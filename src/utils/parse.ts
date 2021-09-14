@@ -11,6 +11,7 @@ import findBabelConfig from "find-babel-config";
 import { ESLint, Linter } from "eslint";
 const jsonFix = require('json-fixer');
 import { regexNormalizeResult } from './common';
+const prettier = require("prettier");
 
 const eslintPlugins = {
   react: require("eslint-plugin-react"),
@@ -139,9 +140,12 @@ const getUsedImports = (code: any, options: any = { transform: true }) => {
 
 const pretify = (code: any) => {
   try {
-    return linter.verifyAndFix(code, {
-      rules: eslintPlugins.prettier.configs.recommended.rules,
-    }).output;
+    return prettier.format(code, {
+      bracketSpacing: false,
+      jsxBracketSameLine: true,
+      singleQuote: true,
+      trailingComma: 'all', parser: "babel"
+    });
   } catch (error) {
     return code;
   }

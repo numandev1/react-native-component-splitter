@@ -50,7 +50,7 @@ const buildComponentPath = (name) => {
 };
 
 const askForComponentName = async () => {
-  const name = await window.showInputBox({
+  let name = await window.showInputBox({
     prompt: "Choose a name for the new component",
     ignoreFocusOut: true,
     placeHolder: "New component name...",
@@ -60,9 +60,7 @@ const askForComponentName = async () => {
     throw new Error("Empty name received");
   }
   if (!/^[A-Z][0-9a-zA-Z_$]*$/g.test(name)) {
-    throw new Error(
-      "Invalid React component name.\nChoose a name that starts with a capital letter, followed by letters or digits only"
-    );
+    name = name.charAt(0).toUpperCase() + name.slice(1);
   }
 
   if (fs.pathExistsSync(buildComponentPath(name))) {
@@ -272,7 +270,7 @@ const createNewComponent = async (componentName: any) => {
         : selection
       }\n` +
       `);\n\n` +
-      `export default ${componentName};\n${stylesheet}\n`
+      `export default ${componentName};\n\n${stylesheet}\n`
     ),
     reactElement: generateReactElement({
       name: componentName,
