@@ -53,6 +53,7 @@ const askForComponentName = async () => {
   let name = await window.showInputBox({
     prompt: "Choose a name for the new component",
     ignoreFocusOut: true,
+
     placeHolder: "New component name...",
   });
 
@@ -150,10 +151,8 @@ const removeUnusedImports = async () => {
   const { document } = editor;
   const code = document.getText();
   const codeLines = _.split(code, "\n");
-  const {
-    firstImportLineIndex,
-    lastImportLineIndex,
-  } = getFirstAndLastImportLineIndexes(codeLines);
+  const { firstImportLineIndex, lastImportLineIndex } =
+    getFirstAndLastImportLineIndexes(codeLines);
 
   const importsString = _.chain(codeLines)
     .slice(firstImportLineIndex, lastImportLineIndex + 1)
@@ -186,9 +185,8 @@ const updateOriginalComponent = async ({ newComponent }) => {
 
 const generateReactElement = ({ name, props, jsx }) => {
   const numberOfProps = _.size(props);
-  const numberOfLeadingSpacesFromStart = parseUtils.getNumberOfLeadingSpaces(
-    jsx
-  );
+  const numberOfLeadingSpacesFromStart =
+    parseUtils.getNumberOfLeadingSpaces(jsx);
   const leadingSpacesFromStart = _.repeat(" ", numberOfLeadingSpacesFromStart);
   let propsString = "";
 
@@ -220,11 +218,13 @@ const extractRelevantImportsAndPropsAndStylesheet = () => {
     `;
   const props = parseUtils.getUndefinedVars(selectionAndImports);
   const imports = parseUtils.getUsedImports(selectionAndImports);
-  const stylesheet = regexNormalizeResult(parseUtils.getStylesheet(code, selection));
+  const stylesheet = regexNormalizeResult(
+    parseUtils.getStylesheet(code, selection)
+  );
   return {
     props,
     imports,
-    stylesheet
+    stylesheet,
   };
 };
 
@@ -259,18 +259,20 @@ const createNewComponent = async (componentName: any) => {
   const uri = editor.document.uri;
   const fileExtension = parseUtils.getUriExtension(uri.fsPath);
   const selection = editor.document.getText(editor.selection);
-  const { imports, props, stylesheet } = extractRelevantImportsAndPropsAndStylesheet();
+  const { imports, props, stylesheet } =
+    extractRelevantImportsAndPropsAndStylesheet();
 
   const newComponent = {
     code: parseUtils.pretify(
       `${buildImportsString(imports)}\n\n` +
-      `const ${componentName} = (${buildPropsString(props)}) => (\n` +
-      `${shouldWrapCodeWithEmptyTag(selection)
-        ? `<View>\n${selection}\n</View>`
-        : selection
-      }\n` +
-      `);\n\n` +
-      `export default ${componentName};\n\n${stylesheet}\n`
+        `const ${componentName} = (${buildPropsString(props)}) => (\n` +
+        `${
+          shouldWrapCodeWithEmptyTag(selection)
+            ? `<View>\n${selection}\n</View>`
+            : selection
+        }\n` +
+        `);\n\n` +
+        `export default ${componentName};\n\n${stylesheet}\n`
     ),
     reactElement: generateReactElement({
       name: componentName,
