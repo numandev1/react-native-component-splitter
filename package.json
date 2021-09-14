@@ -2,7 +2,7 @@
   "name": "react-native-component-splitter",
   "displayName": "React Native Component Splitter",
   "description": "Splits long components into shorter, readable subcomponents",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "icon": "src/assets/icon.png",
   "repository": {
     "type": "git",
@@ -71,7 +71,8 @@
     "test-watch": "tsc -watch -p ./",
     "pretest": "yarn run test-compile && yarn run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
+    "test": "node ./out/test/runTest.js",
+    "publish:extension": "yarn run vscode:prepublish && vsce publish"
   },
   "dependencies": {
     "@types/jest": "^27.0.1",
