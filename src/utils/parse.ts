@@ -6,7 +6,7 @@ import babelPluginTypescriptJsx from "@babel/plugin-transform-react-jsx-source";
 import pluginTransformTypescript from "@babel/plugin-transform-typescript";
 import babelPresetReact from "@babel/preset-react";
 import babelPresetTypescriptReact from "@babel/preset-typescript";
-import { parseForESLint } from "babel-eslint";
+import { parseForESLint } from "@typescript-eslint/parser";
 import findBabelConfig from "find-babel-config";
 import { ESLint, Linter } from "eslint";
 const jsonFix = require('json-fixer');
@@ -54,16 +54,10 @@ const linter = new (class CustomLinter extends Linter {
   }
 
   extractEntityNames(textOrSourceCode: any, config: any) {
-    let lintMessages = [];
-    try {
-      lintMessages = super.verify(textOrSourceCode, {
-        ...linterConfig,
-        ...config,
-      });
-    } catch (error) {
-      console.log(error, "error");
-    }
-
+    let lintMessages = super.verify(textOrSourceCode, {
+      ...linterConfig,
+      ...config,
+    });
 
     return _.chain(lintMessages)
       .map(
@@ -113,7 +107,6 @@ const getUnusedVars = (code: any) => {
 const getUndefinedVars = (code: any) => {
   try {
     const transformedCode = transformCode(code);
-
     return linter.extractEntityNames(transformedCode, {
       rules: {
         "react/jsx-no-undef": "error",
@@ -121,9 +114,16 @@ const getUndefinedVars = (code: any) => {
       },
     });
   } catch (error) {
-    return code;
+    try {
+      const regex1 = /(?!styles)((?<={)\b[a-zA-Z]+\b(?![\s,(]))/g;
+      const regex2 = /(?!console)(?!alert)((?<==>\s*\b)[a-zA-Z]+\b(?![\s,]))/g;
+      const results1 = _.uniq(code.match(regex1));
+      const results2 = _.uniq(code.match(regex2));
+      return results1.concat(results2);
+    } catch (error) {
+    }
+    return [];
   }
-
 };
 
 const getUsedImports = (code: any, options: any = { transform: true }) => {

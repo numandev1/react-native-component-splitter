@@ -214,7 +214,7 @@ const extractRelevantImportsAndPropsAndStylesheet = () => {
 
   const selectionAndImports = `
         ${buildImportsString(parseUtils.getImports(code))}\n
-        export default () => (<View>${selection}</View>);
+        export default () => { return (<View>${selection}</View>)};
     `;
   const props = parseUtils.getUndefinedVars(selectionAndImports);
   const imports = parseUtils.getUsedImports(selectionAndImports);
@@ -265,14 +265,13 @@ const createNewComponent = async (componentName: any) => {
   const newComponent = {
     code: parseUtils.pretify(
       `${buildImportsString(imports)}\n\n` +
-        `const ${componentName} = (${buildPropsString(props)}) => (\n` +
-        `${
-          shouldWrapCodeWithEmptyTag(selection)
-            ? `<View>\n${selection}\n</View>`
-            : selection
-        }\n` +
-        `);\n\n` +
-        `export default ${componentName};\n\n${stylesheet}\n`
+      `const ${componentName} = (${buildPropsString(props)}) => {\nreturn (\n` +
+      `${shouldWrapCodeWithEmptyTag(selection)
+        ? `<View>\n${selection}\n</View>`
+        : selection
+      }\n` +
+      `)\n\n}\n\n` +
+      `export default ${componentName};\n\n${stylesheet}\n`
     ),
     reactElement: generateReactElement({
       name: componentName,
