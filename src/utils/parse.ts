@@ -12,7 +12,6 @@ import { ESLint, Linter } from "eslint";
 const jsonFix = require('json-fixer');
 import { regexNormalizeResult } from './common';
 const prettier = require("prettier");
-
 const eslintPlugins = {
   react: require("eslint-plugin-react"),
   "react-hooks": require("eslint-plugin-react-hooks"),
@@ -90,7 +89,7 @@ const transformCode = (code: any) => {
   }).code;
 };
 
-const getUnusedVars = (code: any) => {
+const getUnusedVars = (code: string) => {
   try {
     const transformedCode = transformCode(code);
     return linter.extractEntityNames(transformedCode, {
@@ -104,7 +103,7 @@ const getUnusedVars = (code: any) => {
 
 };
 
-const getUndefinedVars = (code: any) => {
+const getUndefinedVars = (code: string, stylesheetName) => {
   try {
     const transformedCode = transformCode(code);
     return linter.extractEntityNames(transformedCode, {
@@ -112,10 +111,10 @@ const getUndefinedVars = (code: any) => {
         "react/jsx-no-undef": "error",
         "no-undef": "error",
       },
-    });
+    }).filter(prop => prop !== stylesheetName);
   } catch (error) {
     try {
-      const regex1 = /(?!styles)((?<={)\b[a-zA-Z]+\b(?![\s,(]))/g;
+      const regex1 = new RegExp(`(?!${stylesheetName})((?<={)\\b[a-zA-Z]+\\b(?![\\s,(]))`, "g");
       const regex2 = /(?!console)(?!alert)((?<==>\s*\b)[a-zA-Z]+\b(?![\s,]))/g;
       const results1 = _.uniq(code.match(regex1));
       const results2 = _.uniq(code.match(regex2));
@@ -144,10 +143,13 @@ const pretify = (code: any) => {
       bracketSpacing: false,
       jsxBracketSameLine: true,
       singleQuote: true,
-      trailingComma: 'all', parser: "babel"
+      trailingComma: 'all',
     });
   } catch (error) {
-    return code;
+    return linter.verifyAndFix(
+      code, {
+      rules: eslintPlugins.prettier.configs.recommended.rules,
+    }).output;
   }
 
 };
@@ -248,7 +250,7 @@ const getStylesheet = (code: string, selection: string) => {
   const stylesheet = `
   const ${stylesheetName} = StyleSheet.create(${stylesheetObject});
   `;
-  return stylesheet;
+  return { stylesheetName, stylesheet };
 };
 
 export default {

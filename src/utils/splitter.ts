@@ -216,11 +216,12 @@ const extractRelevantImportsAndPropsAndStylesheet = () => {
         ${buildImportsString(parseUtils.getImports(code))}\n
         export default () => { return (<View>${selection}</View>)};
     `;
-  const props = parseUtils.getUndefinedVars(selectionAndImports);
   const imports = parseUtils.getUsedImports(selectionAndImports);
-  const stylesheet = regexNormalizeResult(
-    parseUtils.getStylesheet(code, selection)
+  let { stylesheetName, stylesheet } = parseUtils.getStylesheet(code, selection);
+  stylesheet = regexNormalizeResult(
+    stylesheet
   );
+  const props = parseUtils.getUndefinedVars(selectionAndImports, stylesheetName);
   return {
     props,
     imports,
