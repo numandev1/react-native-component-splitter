@@ -16,7 +16,7 @@
 
 # React Native Component Splitter
 
-it is a **VS CODE** extension which allows us to split React components into sub-components
+it is a **VS CODE** extension which allows us to split React Native components into sub-components
 
 # Usage
 
