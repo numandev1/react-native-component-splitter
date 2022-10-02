@@ -1,4 +1,4 @@
-name: publish package to npm
+name: publish package to vscode marketplace
 
 on:
   workflow_dispatch:
