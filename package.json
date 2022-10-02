@@ -2,7 +2,7 @@
   "name": "react-native-component-splitter",
   "displayName": "React Native Component Splitter",
   "description": "Split React Naitve components into sub-components",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "icon": "assets/icon.png",
   "repository": {
     "type": "git",
